@@ -1,0 +1,100 @@
+<div class="container">
+  <h2>Doctor's Appointment Schedule</h2>
+
+  <form (ngSubmit)="submitAppointment()" #appointmentForm="ngForm">
+
+    <!-- Appointment Name Dropdown -->
+    <div class="form-group">
+      <label>Appointment Name</label>
+      <select
+        class="form-control"
+        name="appointmentId"
+        [(ngModel)]="appointmentData.appointmentId"
+        required>
+        <option value="">-- Select Appointment --</option>
+        <option *ngFor="let appt of appointments" [value]="appt.id">
+          {{ appt.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Appointment Date -->
+    <div class="form-group mt-3">
+      <label>Appointment Date</label>
+      <input
+        type="date"
+        class="form-control"
+        name="appointmentDate"
+        [(ngModel)]="appointmentData.appointmentDate"
+        required />
+    </div>
+    <!--AppointMent Status-->
+     <!-- Status -->
+ <div class="form-group">
+  <label>Status</label>
+  <select class="form-control" name="appointmentStatus"
+          [(ngModel)]="appointmentData.appointmentStatus"
+          required>
+    <option value="">Select Status</option>
+    <option *ngFor="let s of appointmentStatuses" [value]="s.id">
+      {{ s.name }}
+    </option>
+  </select>
+</div>
+    <!-- Submit Button -->
+    <button
+      type="submit"
+      class="btn btn-primary mt-4"
+      [disabled]="appointmentForm.invalid">
+      {{ editIndex === null ? '' : 'Update' }} Schedule Appointment
+    </button>
+<button type="cancel"  class="btn btn-primary mt-4" *ngIf="editIndex !== null" (click)="cancelEdit()">Cancel</button>
+  </form>
+
+  <hr>
+
+<!-- TABLE -->
+<table *ngIf="appointmentList.length > 0" class="appt-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Appointment Name</th>
+      <th>Date</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let appt of appointmentList; let i = index">
+      <td>{{ i + 1 }}</td>
+      <td>{{ appt.name }}</td>
+      <td>{{ appt.date }}</td>
+      <td>{{appt.appointmentstatus}} <i class="fa-solid fa-circle"
+     [ngClass]="{
+       'text-success': appt.appointmentstatus === 'Completed',
+       'text-warning': appt.appointmentstatus === 'Pending',
+       'text-danger':appt.appointmentstatus === 'Active'
+     }">
+  </i><br>
+ <i class="fa-solid fa-pen-to-square text-primary"
+           style="cursor:pointer; margin-right:8px"
+           (click)="editAppointment(i)"
+           title="Edit">
+        </i>
+
+        <!-- Delete Icon -->
+        <i class="fa-solid fa-trash text-danger"
+           style="cursor:pointer"
+           (click)="deleteAppointment(i)"
+           title="Delete">
+        </i>
+</td>
+ 
+    </tr>
+  </tbody>
+</table>
+
+<p *ngIf="appointmentList.length === 0">
+  No appointments scheduled yet.
+</p>
+</div>
